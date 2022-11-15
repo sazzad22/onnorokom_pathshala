@@ -48,15 +48,16 @@ const Login = () => {
       </p>
     );
   }
+  if (user) {
+    toast("You are Logged In!");
+    navigate(from, { replace: true });
+  }
 
   //current url location
   
-  const onSubmit = (data) => {
-    signInWithEmailAndPassword(data.email, data.password);
-    if (user) {
-      toast("You are Logged In!");
-      navigate('/');
-    }
+  const onSubmit = async (data) => {
+    await signInWithEmailAndPassword(data.email, data.password);
+    
   };
   return (
     <div

@@ -1,24 +1,20 @@
 import React from "react";
-import { Link } from 'react-router-dom';
-import auth from '../firebase.init';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { signOut } from 'firebase/auth';
-
+import { Link } from "react-router-dom";
+import auth from "../firebase.init";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { signOut } from "firebase/auth";
 
 const Navbar = () => {
-
   // Authenticate User
   const [user] = useAuthState(auth);
-  
-    const handleSignOut = () => {
-      signOut(auth);
-    // localStorage.removeItem('accessToken');
-      
-    }
 
+  const handleSignOut = () => {
+    signOut(auth);
+    // localStorage.removeItem('accessToken');
+  };
 
   return (
-    <div class="navbar fixed z-50 bg-blue-300 ">
+    <div class="navbar fixed z-50 glass hover:bg-blue-400 transition ease-in delay-150">
       <div class="navbar-start">
         <div class="dropdown">
           <label tabindex="0" class="btn btn-ghost lg:hidden">
@@ -45,54 +41,68 @@ const Navbar = () => {
             (Mobile)Nav Menues
             ***** */}
             <li>
-              <a>Home</a>
+              <Link to={"/"}>Home</Link>
             </li>
             <li>
               <a>Videos</a>
             </li>
-            
-            
+
             <li>
-              <a>About</a>
+              <Link to={"/about"}>About</Link>
             </li>
+
+            {
+              user &&
+              <li>
+              <Link to={"/dashboard"}>Dashboard</Link>
+                </li> 
+            }
+
           </ul>
         </div>
 
-        
-        <Link class="btn btn-ghost normal-case text-4xl" to={'/'} >Onnorokom Pathshala</Link>
-        
+        <Link class="btn btn-ghost normal-case text-4xl" to={"/"}>
+          Onnorokom Pathshala
+        </Link>
       </div>
       <div class="navbar-center hidden lg:flex">
         <ul class="menu menu-horizontal p-0">
           {/* ******
             Nav Menues
             ***** */}
-            <li>
-            <Link to={'/'} >Home</Link>
-            </li>
-            <li>
-              <a>Videos</a>
-            </li>
-            
-            
-            <li>
-            
-            <Link to={'/'} >Home</Link>
-            
-            </li>
+          <li>
+            <Link className="font-semibold shadow" to={"/"}>Home</Link>
+          </li>
+
+          <li>
+            <Link className="font-semibold shadow" to={"/about"}>About</Link>
+          </li>
+
+          {
+              user &&
+              <li>
+              <Link className="font-semibold shadow" to={"/dashboard"}>Dashboard</Link>
+                </li> 
+            }
         </ul>
       </div>
       <div class="navbar-end">
-        
-      <>
-            {user ? (
-              <button className="btn btn-ghost" onClick={handleSignOut}>
-                Sign Out
-              </button>
-            ) : (
-              <Link className="btn btn-secondary" to={"/login"}  >Login</Link>
-            )}
-          </>
+        <>
+          {
+            user && <p className="font-semibold py-1 btn bg-transparent border-0 text-gray-700 hover:bg-transparent hover:underline">{ user.displayName }</p>
+          }
+        </>
+        <>
+          {user ? (
+            <button className="btn btn-ghost" onClick={handleSignOut}>
+              Sign Out
+            </button>
+          ) : (
+            <Link className="btn btn-secondary" to={"/login"}>
+              Login
+            </Link>
+          )}
+        </>
       </div>
     </div>
   );

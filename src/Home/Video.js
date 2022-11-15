@@ -7,6 +7,8 @@ const Video = ({ video, refetch }) => {
 
   return (
     <div class="card w-1/2 lg:my-5 my-5 bg-base-100 shadow-md hover:drop-shadow-2xl ease-in-out duration-300 rounded-md ">
+
+      {/* Embeded Video */}
       <iframe className="rounded shadow" height={200} src={link}></iframe>
       <div class="card-body">
         <h2 class="card-title">Video Title</h2>
