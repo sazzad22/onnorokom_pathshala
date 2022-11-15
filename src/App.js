@@ -9,6 +9,8 @@ import SignUp from './Login-signup/SignUp';
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import RequireAuth from './Login-signup/RequireAuth';
+import VideoDetails from './VideoDetail/VideoDetails';
 
 function App() {
   return (
@@ -26,9 +28,15 @@ function App() {
         <Route path="/signup" element={<SignUp></SignUp>}></Route>
 
         {/* Private Routes */}
-        <Route>
-
-        </Route>
+        <Route
+          path='/product/id'
+          element={
+            <RequireAuth>
+              <VideoDetails>
+              </VideoDetails>
+            </RequireAuth>
+          }
+        ></Route>
 
       </Routes>
       {/* Footer */}

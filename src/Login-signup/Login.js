@@ -4,10 +4,12 @@ import {
   useSignInWithGoogle,
 } from "react-firebase-hooks/auth";
 import { useForm } from "react-hook-form";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import auth from "../firebase.init";
 import LoadingSpinner from "../Shared/LoadingSpinner";
 import bg from "../images/Onnorokom Cover image.jpg";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // import useToken from "../../hooks/useToken";
 
 const Login = () => {
@@ -47,8 +49,14 @@ const Login = () => {
     );
   }
 
+  //current url location
+  
   const onSubmit = (data) => {
     signInWithEmailAndPassword(data.email, data.password);
+    if (user) {
+      toast("You are Logged In!");
+      navigate('/');
+    }
   };
   return (
     <div

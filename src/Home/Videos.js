@@ -32,6 +32,9 @@ const Videos = () => {
 
   // Authenticate User
   const [user] = useAuthState(auth);
+  //use this user to find & fetch the users from database
+  //there we have if user liked or disliked a video.
+  //then we send that data to Video component
 
   //current url
   const location = useLocation();
@@ -43,7 +46,7 @@ const Videos = () => {
     }
     //post api to add video link to server
 
-    
+
   }
   
     
