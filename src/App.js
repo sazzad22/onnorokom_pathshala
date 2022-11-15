@@ -12,7 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
-    <div>
+    <div >
       <Navbar></Navbar>
       <Routes>
         {/* Home Page */}
@@ -27,7 +27,7 @@ function App() {
 
         {/* Private Routes */}
         <Route>
-          
+
         </Route>
 
       </Routes>

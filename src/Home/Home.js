@@ -4,7 +4,7 @@ import Videos from './Videos';
 
 const Home = () => {
     return (
-        <div>
+        <div className='bg-base-100'>
             <Banner></Banner>
             <Videos></Videos>
         </div>

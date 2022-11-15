@@ -8,9 +8,26 @@ const Videos = () => {
   //Fetching data using React Query
 
   //dummyLinks
-  const videoLinks = [
-    "https://www.youtube.com/embed/hZjkEf_w6go",
-    "https://www.youtube.com/embed/kgcqAZ66aE8",
+  const videos = [
+    {
+      link: "https://www.youtube.com/embed/hZjkEf_w6go",
+      likeCount: 20,
+      dislikeCount: 10,
+      viewCount:30
+    },
+    {
+      link: "https://www.youtube.com/embed/kgcqAZ66aE8",
+      likeCount: 12,
+      dislikeCount: 4,
+      viewCount:40
+    },
+    {
+      link: "https://www.youtube.com/embed/hZjkEf_w6go",
+      likeCount: 22,
+      dislikeCount: 11,
+      viewCount:25
+    },
+    
   ];
 
   // Authenticate User
@@ -22,8 +39,11 @@ const Videos = () => {
   const handlePost = () => {
     if (!user) {
       console.log('Please log in first');
-      
+      return <Navigate to="/login" state={{ from: location }} replace ></Navigate>
     }
+    //post api to add video link to server
+
+    
   }
   
     
@@ -53,7 +73,7 @@ const Videos = () => {
       {/* Video List */}
       <div className="grid grid-cols-1 lg:grid-cols-1 md:grid-cols-2 gap-1 justify-items-center my-20">
         {/* add refetch from react query */}
-        {videoLinks.map((video) => (
+        {videos.map((video) => (
           <Video key={video} video={video}></Video>
         ))}
       </div>
