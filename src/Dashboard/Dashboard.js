@@ -3,8 +3,32 @@ import auth from "../firebase.init";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Navigate, useLocation } from "react-router-dom";
 import UserAddedVideo from './UserAddedVideo';
+import { useForm } from "react-hook-form";
 
 const Dashboard = () => {
+
+  //user input form
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
+
+  // get url
+  function youtube_parser(url){
+    var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    var match = url.match(regExp);
+    return (match&&match[7].length==11)? match[7] : false;
+}
+  const onSubmit = (data) => {
+    const linkKey = youtube_parser(data.url)
+    const embededLink = `https://www.youtube.com/embed/${linkKey}`
+    console.log(embededLink);
+    //send this embeded link to db when user add one
+    
+    
+  };
+
   const [user] = useAuthState(auth);
   //current url
   const location = useLocation();
@@ -36,33 +60,58 @@ const Dashboard = () => {
         
       ];
 
-  const handlePost = () => {
-    console.log("Video Posted");
-    //post api to add video link to server
-  };
+  
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-1 md:grid-cols-1 gap-1 justify-items-center py-20">
       <h2 className="text-5xl font-semibold text-gray-600 underline my-10">
         Post a Video
       </h2>
-      <div class="form-control w-full max-w-xl ">
-        <input
-          type="text"
-          placeholder="http://"
-          class="input input-bordered border-primary w-full max-w-xl shadow-xl"
-        />
-        <label class="label">
-          <span class="label-text-alt">Share your video link</span>
-        </label>
-        {/* post video button */}
-        <button
-          onClick={handlePost}
-          className="btn btn-secondary shadow-xl text-blue-900"
-        >
-          Post
-        </button>
-      </div>
+
+      {/* User Posts A Video */}
+
+
+      {/* form */}
+      <form className="w-full border  grid grid-cols-1 justify-items-center" onSubmit={handleSubmit(onSubmit)}>
+            <div className="form-control grid grid-cols-1 justify-items-center border w-full max-w-xl">
+              {/* Youtube url input */}
+              <label className="label justify-self-start">
+                <span className="label-text">Video</span>
+              </label>
+              <input
+                type="text"
+                placeholder="http://"
+                className="input input-bordered border-primary w-full max-w-xl shadow-xl"
+                {...register("url", {
+                  required: {
+                    value: true,
+                    message: "A link is Required",
+                  },
+                  
+                })}
+              />
+              <label className="label">
+                {errors.url?.type === "required" && (
+                  <span className="text-red-500 label-text-alt">
+                    {errors.url.message}
+                  </span>
+                )}
+                
+          </label>
+          <label className="justify-self-start">Share youtube link</label>
+            
+            
+            {/* Post Button */}
+            <input
+              className="btn btn-secondary w-full shadow-xl text-blue-900  hover:drop-shadow-xl ease-in"
+              value="Post Video Link"
+              type="submit"
+          />
+          </div>
+          </form>
+
+
+      
 
       {/* User Information */}
       <div>
