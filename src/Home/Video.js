@@ -79,15 +79,15 @@ const Video = ({ video, refetch }) => {
             <Link
               onClick={updateDislike}
               className="btn btn-secondary rounded w- shadow-xl text-blue-900"
-              to={"/"}
+              
             >
               Dislike
             </Link>
 
             {/* Details button */}
-            <button className="btn btn-secondary rounded w- shadow-xl text-blue-900">
+            <Link to={'/video-detail'} className="btn btn-secondary rounded w- shadow-xl text-blue-900">
               Details
-            </button>
+            </Link>
           </div>
         </div>
       </div>

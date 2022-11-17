@@ -27,6 +27,7 @@ function App() {
         {/* Login SignUp page */}
         <Route path="/login" element={<Login></Login>}></Route>
         <Route path="/signup" element={<SignUp></SignUp>}></Route>
+        <Route path="/video-detail" element={<VideoDetails></VideoDetails>}></Route>
 
         {/* Private Routes */}
         <Route
