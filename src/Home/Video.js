@@ -1,25 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Iframe from 'react-iframe-click';
+import Iframe from "react-iframe-click";
+import { async } from "@firebase/util";
+import { useAuthState } from "react-firebase-hooks/auth";
+import auth from "../firebase.init";
 
 const Video = ({ video, refetch }) => {
-  const { _id,link, likeCount, dislikeCount, viewCount } = video;
+  const [user] = useAuthState(auth);
+
+  const { _id, link, likeCount, dislikeCount, viewCount } = video;
   const navigate = useNavigate();
 
   //change like count on UI
   const [videoData, setVideoData] = useState({});
   useEffect(() => {
-    const url = ` https://hidden-citadel-35575.herokuapp.com/inventory/$id`;
-    fetch(url)
+    const url = ` http://localhost:5000/api/v1/video/${_id}`;
+    fetch(url, {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+      },
+    })
       .then((res) => res.json())
-      .then((data) => setVideoData(data));
-  }, [video]);
-
-
+      .then((data) => setVideoData(data.data));
+  }, []);
+  // console.log(videoData);
 
   //update view count when clicked and update the video db
-
-  
 
   //update count when user watches a video
   const updateCount = (count) => {
@@ -27,30 +34,50 @@ const Video = ({ video, refetch }) => {
     console.log("count");
   };
 
-  //update like when user likes a video
-  const updateLike = () => {
-    console.log('Liked');
+  //hadle like button
+  const updateLike = async () => {
+    console.log("Liked");
+    videoData.likeCount++;
+
+    //update User Liked
+    videoData.userLiked.push(user.email);
+
+    const updatedLike = {
+      likeCount: videoData.likeCount,
+      userLiked:videoData.userLiked
+    }
+
+    
     //update video db by adding the user email in the userLiked[] array.
+    fetch(`http://localhost:5000/api/v1/video/${_id}`, {
+      method: "PATCH",
+      headers: {
+        "content-type": "application/json",
+      },
+      body:JSON.stringify(updatedLike)
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data?.result?.video);
+        setVideoData(data?.result?.video)
+    })
+  };
 
-  }
+  //update like when user likes a video
   const updateDislike = () => {
-    console.log('Disliked');
+    console.log("Disliked");
     //update video db by adding the user email in the userDisliked[] array.
-
-  }
-
-   
+  };
 
   return (
-    <div  class="card w-1/2 lg:my-5 my-5 bg-base-100 shadow-md hover:drop-shadow-2xl ease-in-out duration-300 rounded-md ">
+    <div class="card w-1/2 lg:my-5 my-5 bg-base-100 shadow-md hover:drop-shadow-2xl ease-in-out duration-300 rounded-md ">
       {/* Embeded Video */}
 
       <Iframe
         onInferredClick={updateCount}
         className="rounded shadow"
         height={200}
-        src={link}
-        
+        src={videoData?.link}
       ></Iframe>
       <div class="card-body">
         <h2 class="card-title">Video Title</h2>
@@ -62,16 +89,19 @@ const Video = ({ video, refetch }) => {
         {/* View,Like,Dislike Count */}
         <div>
           <p>
-            Like: <span className="text-blue-500">{likeCount}</span> | dislike:{" "}
-            <span className="text-blue-500">{dislikeCount}</span> | view:{" "}
-            <span className="text-blue-500">{viewCount}</span>{" "}
+            Like: <span className="text-blue-500">{videoData?.likeCount}</span> | dislike:{" "}
+            <span className="text-blue-500">{videoData?.dislikeCount}</span> | view:{" "}
+            <span className="text-blue-500">{videoData?.viewCount}</span>{" "}
           </p>
         </div>
 
         <div class="card-actions justify-center  ">
           <div className="grid grid-cols-3 w-full gap-6">
             {/* Like Button */}
-            <button onClick={updateLike} className="btn btn-secondary rounded w- shadow-xl text-blue-900">
+            <button
+              onClick={updateLike}
+              className="btn btn-secondary rounded w- shadow-xl text-blue-900"
+            >
               Like
             </button>
 
@@ -79,13 +109,15 @@ const Video = ({ video, refetch }) => {
             <Link
               onClick={updateDislike}
               className="btn btn-secondary rounded w- shadow-xl text-blue-900"
-              
             >
               Dislike
             </Link>
 
             {/* Details button */}
-            <Link to={'/video-detail'} className="btn btn-secondary rounded w- shadow-xl text-blue-900">
+            <Link
+              to={"/video-detail"}
+              className="btn btn-secondary rounded w- shadow-xl text-blue-900"
+            >
               Details
             </Link>
           </div>
