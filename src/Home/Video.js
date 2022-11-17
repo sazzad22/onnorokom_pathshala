@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Iframe from 'react-iframe-click';
 
 const Video = ({ video, refetch }) => {
-  const { link, likeCount, dislikeCount, viewCount } = video;
+  const { _id,link, likeCount, dislikeCount, viewCount } = video;
   const navigate = useNavigate();
 
   //change like count on UI

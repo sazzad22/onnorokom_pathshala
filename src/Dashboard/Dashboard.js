@@ -4,9 +4,11 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { Navigate, useLocation } from "react-router-dom";
 import UserAddedVideo from './UserAddedVideo';
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
 
+  const [user] = useAuthState(auth);
   //user input form
   const {
     register,
@@ -20,16 +22,44 @@ const Dashboard = () => {
     var match = url.match(regExp);
     return (match&&match[7].length==11)? match[7] : false;
 }
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const linkKey = youtube_parser(data.url)
+    
+    //getting embeded link from shared youtube link
     const embededLink = `https://www.youtube.com/embed/${linkKey}`
     console.log(embededLink);
-    //send this embeded link to db when user add one
-    
-    
-  };
 
-  const [user] = useAuthState(auth);
+    //with this embeded link create a new video and post that new video data to db when user add one
+    const video = {
+      link: embededLink,
+      likeCount: 0,
+      dislikeCount: 0,
+      viewCount: 0,
+      userLiked: [],
+      userDisliked: [],
+      uploaderEmail: user.email
+    }
+    fetch("http://localhost:5000/api/v1/video", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        
+      },
+      body: JSON.stringify(video),
+    })
+      .then((res) => res.json())
+      .then((inserted) => {
+        console.log(inserted);
+        if (inserted.insertedId) {
+          toast.success("Video Added successfully");
+          console.log('video added');
+          
+        }
+      });
+  };
+    
+  
+
   //current url
   const location = useLocation();
 

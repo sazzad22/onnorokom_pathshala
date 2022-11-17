@@ -51,7 +51,7 @@ const Videos = () => {
       <div className="grid grid-cols-1 lg:grid-cols-1 md:grid-cols-2 gap-1 justify-items-center my-20">
         {/* add refetch from react query */}
         {videos.map((video) => (
-          <Video key={video} video={video}></Video>
+          <Video key={video._id} video={video}></Video>
         ))}
       </div>
     </div>
