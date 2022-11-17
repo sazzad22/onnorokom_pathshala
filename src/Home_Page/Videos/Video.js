@@ -3,12 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import Iframe from "react-iframe-click";
 import { async } from "@firebase/util";
 import { useAuthState } from "react-firebase-hooks/auth";
-import auth from "../firebase.init";
+import auth from "../../firebase.init";
+
 
 const Video = ({ video, refetch }) => {
   const [user] = useAuthState(auth);
 
-  const { _id, link, likeCount, dislikeCount, viewCount } = video;
+  const { _id } = video;
   const navigate = useNavigate();
 
   //change like count on UI
@@ -29,38 +30,60 @@ const Video = ({ video, refetch }) => {
   //update view count when clicked and update the video db
 
   //update count when user watches a video
-  const updateCount = (count) => {
-    count++;
-    console.log("count");
+  const updateViewCount = async () => {
+      console.log("viewed");
+      videoData.viewCount++;
+
+      const updatedViewCount = {
+        viewCount: videoData?.viewCount        
+      };
+
+      //update video db ,by increasing view count in db
+      fetch(`http://localhost:5000/api/v1/video/${_id}`, {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(updatedViewCount),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data?.result?.video);
+          setVideoData(data?.result?.video);
+        });
+    
   };
 
   //hadle like button
+  // updateLike(user,_id,videoData,setVideoData)
   const updateLike = async () => {
-    console.log("Liked");
-    videoData.likeCount++;
+    //only logged in user can like a video
+    if (user && !videoData.userLiked.includes(user.email)) {
+      console.log("Liked");
+      videoData.likeCount++;
 
-    //update User Liked
-    videoData.userLiked.push(user.email);
+      //update User Liked
+      videoData.userLiked.push(user.email);
 
-    const updatedLike = {
-      likeCount: videoData.likeCount,
-      userLiked:videoData.userLiked
+      const updatedLike = {
+        likeCount: videoData.likeCount,
+        userLiked: videoData.userLiked,
+      };
+
+      //update video db by adding the user email in the userLiked[] array.
+      fetch(`http://localhost:5000/api/v1/video/${_id}`, {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(updatedLike),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data?.result?.video);
+          setVideoData(data?.result?.video);
+        });
     }
-
-    
-    //update video db by adding the user email in the userLiked[] array.
-    fetch(`http://localhost:5000/api/v1/video/${_id}`, {
-      method: "PATCH",
-      headers: {
-        "content-type": "application/json",
-      },
-      body:JSON.stringify(updatedLike)
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data?.result?.video);
-        setVideoData(data?.result?.video)
-    })
   };
 
   //update like when user likes a video
@@ -74,7 +97,7 @@ const Video = ({ video, refetch }) => {
       {/* Embeded Video */}
 
       <Iframe
-        onInferredClick={updateCount}
+        onInferredClick={updateViewCount}
         className="rounded shadow"
         height={200}
         src={videoData?.link}
@@ -89,9 +112,10 @@ const Video = ({ video, refetch }) => {
         {/* View,Like,Dislike Count */}
         <div>
           <p>
-            Like: <span className="text-blue-500">{videoData?.likeCount}</span> | dislike:{" "}
-            <span className="text-blue-500">{videoData?.dislikeCount}</span> | view:{" "}
-            <span className="text-blue-500">{videoData?.viewCount}</span>{" "}
+            Like: <span className="text-blue-500">{videoData?.likeCount}</span>{" "}
+            | dislike:{" "}
+            <span className="text-blue-500">{videoData?.dislikeCount}</span> |
+            view: <span className="text-blue-500">{videoData?.viewCount}</span>{" "}
           </p>
         </div>
 
