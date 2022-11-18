@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const UserVideo = ({ link }) => {
     
   return (
-    <div class="card w-3/4 lg:my-5 my-5 bg-base-100 shadow-md hover:drop-shadow-2xl ease-in-out duration-300 rounded-md ">
+    <div class="card w-3/4 lg:my-5 my-5 bg-base-100 shadow-2xl hover:drop-shadow-2xl ease-in-out duration-300 rounded-md ">
       {/* Embeded Video */}
       <iframe
         className="rounded shadow w-full h-auto"
@@ -28,25 +28,7 @@ const UserVideo = ({ link }) => {
         </div> */}
 
         <div class="card-actions justify-center  ">
-          <div className="grid grid-cols-3 w-full gap-6">
-            {/* Like Button */}
-            <button className="btn btn-secondary rounded w- shadow-xl text-blue-900">
-              Like
-            </button>
-
-            {/* Dislike button */}
-            <Link
-              className="btn btn-secondary rounded w- shadow-xl text-blue-900"
-              to={"/"}
-            >
-              Dislike
-            </Link>
-
-            {/* Details button */}
-            <button className="btn btn-secondary rounded w- shadow-xl text-blue-900">
-              Details
-            </button>
-          </div>
+          
         </div>
       </div>
     </div>
