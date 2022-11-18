@@ -95,16 +95,44 @@ const Video = ({ video, refetch }) => {
   const updateDislike = () => {
     console.log("Disliked");
     //update video db by adding the user email in the userDisliked[] array.
+
+    //only logged in user can like a video
+    if (user && !videoData.userDisliked.includes(user.email)) {
+      console.log("Liked");
+      videoData.dislikeCount++;
+
+      //update User Liked
+      videoData.userLiked.push(user.email);
+
+      const updatedLike = {
+        dislikeCount: videoData.dislikeCount,
+        userDisked: videoData.userDisliked,
+      };
+
+      //update video db by adding the user email in the userLiked[] array.
+      fetch(`http://localhost:5000/api/v1/video/${_id}`, {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(updatedLike),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data?.result?.video);
+          setVideoData(data?.result?.video);
+        });
+    }
   };
 
   return (
-    <div class="card w-1/2 lg:my-5 my-5 bg-base-100 shadow-md hover:drop-shadow-2xl ease-in-out duration-300 rounded-md ">
+    <div class="card w-1/2 lg:my-5 my-5 bg-base-100 drop-shadow-2xl shadow-xl ease-in-out duration-300 rounded-md ">
       {/* Embeded Video */}
 
       <Iframe
         onInferredClick={updateViewCount}
         className="rounded shadow"
-        height={200}
+        height={400}
         src={videoData?.link}
       ></Iframe>
       <div class="card-body">
