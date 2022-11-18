@@ -25,7 +25,7 @@ const SignUp = () => {
     handleSubmit,
   } = useForm();
   const navigate = useNavigate();
-  const [token] = useToken(user || gUser);
+  // const [token] = useToken(user || gUser);
 
 
   let signUpError;

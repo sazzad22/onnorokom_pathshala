@@ -9,7 +9,7 @@ const useToken = user =>{
             displayName:name,
             email: email,
         };
-        /* if(email){
+        if(email){
             fetch(`https://secret-dusk-46242.herokuapp.com/user/${email}`, {
                 method:'PUT',
                 headers: {
@@ -24,7 +24,7 @@ const useToken = user =>{
                 localStorage.setItem('accessToken', accessToken);
                 setToken(accessToken);
             })
-        } */
+        }
 
     }, [user]);
     return [token];
