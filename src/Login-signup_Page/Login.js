@@ -152,9 +152,9 @@ const Login = () => {
           </form>
           <p className="mt-3">
             <small>
-              New to Doctors Portal?{" "}
+              New to Onnorokom Pathshala ?{" "}
               <Link
-                className="text-secondary hover:underline font-bold"
+                className="text-secondary underline font-extrabold "
                 to="/signup"
               >
                 Sign Up

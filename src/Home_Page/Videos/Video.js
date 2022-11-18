@@ -4,14 +4,16 @@ import Iframe from "react-iframe-click";
 import { async } from "@firebase/util";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
+import Loading from "../../Shared/LoadingSpinner";
+
 
 
 const Video = ({ video, refetch }) => {
-  const [user] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
+  
 
   const { _id } = video;
-  const navigate = useNavigate();
-
+  
   //change like count on UI
   const [videoData, setVideoData] = useState({});
   useEffect(() => {
@@ -26,6 +28,9 @@ const Video = ({ video, refetch }) => {
       .then((data) => setVideoData(data.data));
   }, []);
   // console.log(videoData);
+  if (loading) {
+    return<Loading></Loading>
+  }
 
   //update view count when clicked and update the video db
 
@@ -103,11 +108,11 @@ const Video = ({ video, refetch }) => {
         src={videoData?.link}
       ></Iframe>
       <div class="card-body">
-        <h2 class="card-title">Video Title</h2>
-        <p>
+        
+        {/* <p>
           {" "}
           <span className="font-semibold text-neutral">Descripttion:</span>
-        </p>
+        </p> */}
 
         {/* View,Like,Dislike Count */}
         <div>
@@ -139,7 +144,7 @@ const Video = ({ video, refetch }) => {
 
             {/* Details button */}
             <Link
-              to={"/video-detail"}
+              to={`/video/${_id}`}
               className="btn btn-secondary rounded w- shadow-xl text-blue-900"
             >
               Details

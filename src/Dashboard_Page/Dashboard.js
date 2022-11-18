@@ -2,19 +2,23 @@ import React from "react";
 import auth from "../firebase.init";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Navigate, useLocation } from "react-router-dom";
-import UserAddedVideo from './UserAddedVideo';
+import UserAddedVideo from './UserAddedVideo/UserAddedVideo';
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import Loading from "../Shared/LoadingSpinner";
 
 const Dashboard = () => {
 
-  const [user] = useAuthState(auth);
+  const [user,loading] = useAuthState(auth);
   //user input form
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
+  if (loading) {
+    return <Loading></Loading>
+  }
 
   // get url
   function youtube_parser(url){
@@ -60,8 +64,7 @@ const Dashboard = () => {
     
   
 
-  //current url
-  const location = useLocation();
+  
 
   //fetch the user data -from server
 

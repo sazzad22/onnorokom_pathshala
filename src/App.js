@@ -30,8 +30,9 @@ function App() {
         <Route path="/video-detail" element={<VideoDetails></VideoDetails>}></Route>
 
         {/* Private Routes */}
+
         <Route
-          path="/product/id"
+          path="/video/:id"
           element={
             <RequireAuth>
               <VideoDetails></VideoDetails>

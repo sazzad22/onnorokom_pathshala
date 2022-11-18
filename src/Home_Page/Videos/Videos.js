@@ -4,11 +4,12 @@ import auth from "../../firebase.init";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Navigate, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import LoadingSpinner from "../../Shared/LoadingSpinner";
+import Loading from "../../Shared/LoadingSpinner";
 
 const Videos = () => {
-  const [user] = useAuthState(auth);
+  const [user,loading] = useAuthState(auth);
   //Fetching data using React Query
+  console.log(user);
 
   const {
     data: data,
@@ -21,14 +22,16 @@ const Videos = () => {
         accept: "application/json",
       },
     }).then((res) => res.json())
-  );
+    );
+  
 
+    if (isLoading || loading) {
+      return <Loading></Loading>;
+    }
   //Video data
   const videos = data?.data;
 
-  if (isLoading) {
-    return <LoadingSpinner></LoadingSpinner>;
-  }
+
 
   // Authenticate User
   //use this user to find & fetch the users from database

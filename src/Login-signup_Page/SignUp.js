@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import auth from "../firebase.init";
 import Loading from "../Shared/LoadingSpinner";
 import { toast } from "react-toastify";
+import useToken from "../customHooks/useToken";
 
 //*Enable later
 // import useToken from "../../hooks/useToken";
@@ -24,7 +25,7 @@ const SignUp = () => {
     handleSubmit,
   } = useForm();
   const navigate = useNavigate();
-//   const [token] = useToken(user || gUser);
+  const [token] = useToken(user || gUser);
 
 
   let signUpError;
@@ -48,15 +49,47 @@ const SignUp = () => {
 //   }
 
     if (user) {
-        console.log(user, gUser);
+        // console.log(user, gUser);
+        
     toast("Thanks for signing up");
     navigate('/');
     }
     
   const onSubmit = async (data) => {
+    //created user in firebase
     await createUserWithEmailAndPassword(data.email, data.password);
     await updateProfile({ displayName: data.name });
+
+    //creating user data and sending to userDatabase
+    const userData = {
+      displayName:  data?.name,
+      email:  data?.email,
+      password: data?.password
+    };
+    // post req api
+    fetch("http://localhost:8000/api/v1/user", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        
+      },
+      body: JSON.stringify(userData),
+    })
+      .then((res) => res.json())
+      .then((inserted) => {
+        console.log(inserted);
+        if (inserted.insertedId) {
+          toast.success("user Added successfully");
+          console.log('user added');
+          
+        }
+      });
+
   };
+
+
+  
+
   return (
     <div className="flex items-center min-h-screen justify-center pt-20">
       <div className="card w-96 bg-base-100 shadow-2xl ">
