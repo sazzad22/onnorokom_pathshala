@@ -6,18 +6,15 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
 import Loading from "../../Shared/LoadingSpinner";
 
-
-
 const Video = ({ video, refetch }) => {
   const [user, loading] = useAuthState(auth);
-  
 
   const { _id } = video;
-  
+
   //change like count on UI
   const [videoData, setVideoData] = useState({});
   useEffect(() => {
-    const url = ` http://localhost:5000/api/v1/video/${_id}`;
+    const url = ` https://onnorokom-server-cyce.vercel.app/video-server/api/v1/video/${_id}`;
     fetch(url, {
       method: "GET",
       headers: {
@@ -29,34 +26,36 @@ const Video = ({ video, refetch }) => {
   }, []);
   // console.log(videoData);
   if (loading) {
-    return<Loading></Loading>
+    return <Loading></Loading>;
   }
 
   //update view count when clicked and update the video db
 
   //update count when user watches a video
   const updateViewCount = async () => {
-      console.log("viewed");
-      videoData.viewCount++;
+    console.log("viewed");
+    videoData.viewCount++;
 
-      const updatedViewCount = {
-        viewCount: videoData?.viewCount        
-      };
+    const updatedViewCount = {
+      viewCount: videoData?.viewCount,
+    };
 
-      //update video db ,by increasing view count in db
-      fetch(`http://localhost:5000/api/v1/video/${_id}`, {
+    //update video db ,by increasing view count in db
+    fetch(
+      `https://onnorokom-server-cyce.vercel.app/video-server/api/v1/video/${_id}`,
+      {
         method: "PATCH",
         headers: {
           "content-type": "application/json",
         },
         body: JSON.stringify(updatedViewCount),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data?.result?.video);
-          setVideoData(data?.result?.video);
-        });
-    
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data?.result?.video);
+        setVideoData(data?.result?.video);
+      });
   };
 
   //hadle like button
@@ -76,13 +75,16 @@ const Video = ({ video, refetch }) => {
       };
 
       //update video db by adding the user email in the userLiked[] array.
-      fetch(`http://localhost:5000/api/v1/video/${_id}`, {
-        method: "PATCH",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(updatedLike),
-      })
+      fetch(
+        `https://onnorokom-server-cyce.vercel.app/video-server/api/v1/video/${_id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(updatedLike),
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           console.log(data?.result?.video);
@@ -110,13 +112,16 @@ const Video = ({ video, refetch }) => {
       };
 
       //update video db by adding the user email in the userLiked[] array.
-      fetch(`http://localhost:5000/api/v1/video/${_id}`, {
-        method: "PATCH",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(updatedLike),
-      })
+      fetch(
+        `https://onnorokom-server-cyce.vercel.app/video-server/api/v1/video/${_id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(updatedLike),
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           console.log(data?.result?.video);
@@ -136,7 +141,6 @@ const Video = ({ video, refetch }) => {
         src={videoData?.link}
       ></Iframe>
       <div class="card-body">
-        
         {/* <p>
           {" "}
           <span className="font-semibold text-neutral">Descripttion:</span>

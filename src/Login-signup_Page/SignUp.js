@@ -27,9 +27,8 @@ const SignUp = () => {
   const navigate = useNavigate();
   // const [token] = useToken(user || gUser);
 
-
   let signUpError;
-  if (loading || gLoading ||updating) {
+  if (loading || gLoading || updating) {
     return <Loading></Loading>;
   }
 
@@ -39,22 +38,22 @@ const SignUp = () => {
         <small>{error?.message || gError?.message}</small>
       </p>
     );
-    }
-    
-    //*Enable later
-//   if (token) {
-//     console.log(user, gUser);
-//     toast("Thanks for signing up");
-//     navigate('/login');
-//   }
+  }
 
-    if (user) {
-        // console.log(user, gUser);
-        
+  //*Enable later
+  //   if (token) {
+  //     console.log(user, gUser);
+  //     toast("Thanks for signing up");
+  //     navigate('/login');
+  //   }
+
+  if (user) {
+    // console.log(user, gUser);
+
     toast("Thanks for signing up");
-    navigate('/');
-    }
-    
+    navigate("/");
+  }
+
   const onSubmit = async (data) => {
     //created user in firebase
     await createUserWithEmailAndPassword(data.email, data.password);
@@ -62,16 +61,15 @@ const SignUp = () => {
 
     //creating user data and sending to userDatabase
     const userData = {
-      displayName:  data?.name,
-      email:  data?.email,
-      password: data?.password
+      displayName: data?.name,
+      email: data?.email,
+      password: data?.password,
     };
     // post req api
-    fetch("http://localhost:8000/api/v1/user", {
+    fetch("https://onnorokom-server-cyce.vercel.app/user-server/api/v1/user", {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        
       },
       body: JSON.stringify(userData),
     })
@@ -80,15 +78,10 @@ const SignUp = () => {
         console.log(inserted);
         if (inserted.insertedId) {
           toast.success("user Added successfully");
-          console.log('user added');
-          
+          console.log("user added");
         }
       });
-
   };
-
-
-  
 
   return (
     <div className="flex items-center min-h-screen justify-center pt-20">

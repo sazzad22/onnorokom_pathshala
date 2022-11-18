@@ -8,7 +8,7 @@ const VideoDetails = () => {
 
   //get request to get video ,filtered by id, from database
   useEffect(() => {
-    const url = ` http://localhost:5000/api/v1/video/${id}`;
+    const url = ` https://onnorokom-server-cyce.vercel.app/video-server/api/v1/video/${id}`;
     fetch(url, {
       method: "GET",
       headers: {
